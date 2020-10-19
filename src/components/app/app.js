@@ -110,6 +110,10 @@ export default class App extends Component {
     });
   }
 
+  clearFilter = () => {
+    this.setState({term:''});
+  }
+
   sortItems(arr) {
     return arr.sort((a, b) => {
       if (!a.important && b.important) {
@@ -141,7 +145,10 @@ export default class App extends Component {
       <div className="todo-app">
         <AppHeader toDo={todoCount} done={doneCount} />
         <div className="top-panel d-flex">
-          <SearchPanel onSearchChange={this.onSearchChange} />
+          <SearchPanel 
+          onSearchChange={this.onSearchChange} 
+          clearFilter={this.clearFilter}
+          term={term}/>
         </div>
 
         <TodoList
