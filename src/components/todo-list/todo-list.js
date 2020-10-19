@@ -1,33 +1,61 @@
-import React from 'react';
+import React, { Component } from 'react';
+import ReactDragListView from 'react-drag-listview'
 
 import TodoListItem from '../todo-list-item';
 import './todo-list.css';
 
-const TodoList = ({
-  todos,
-  onDeleted,
-  onToggleImportant,
-  onToggleDone 
-}) => {
+export default class TodoList extends Component {
 
-  const elements = todos.map((item) => {
-    const { id, ...itemProps } = item;
+  render() {
+    const { todos, onDeleted, onToggleImportant,
+      onToggleDone, onChangeText, onSwapIndex,
+      draggable } = this.props;
+            
+    const activeElements = todos.filter((el) => {
+      return !el.done;
+    }).map((item) => {
+      const { id, ...itemProps } = item;
+      return (
+        <li key={id}>
+          <TodoListItem {...itemProps}
+            onDeleted={() => onDeleted(id)}
+            onToggleImportant={() => onToggleImportant(id)}
+            onToggleDone={() => onToggleDone(id)}
+            onChangeText={(newText) => onChangeText(newText, id)}
+            draggable={draggable} />
+        </li>
+      );
+    });
+
+    const doneElements = todos.filter((el) => {
+      return el.done;
+    }).map((item) => {
+      const { id, ...itemProps } = item;
+      return (
+        <li key={id}>
+          <TodoListItem {...itemProps}
+            onDeleted={() => onDeleted(id)}
+            onToggleImportant={() => onToggleImportant(id)}
+            onToggleDone={() => onToggleDone(id)}
+            onChangeText={(newText) => onChangeText(newText, id)} />
+        </li>
+      );
+    });
 
     return (
-      <li key={id} className="list-group-item">
-        <TodoListItem {...itemProps } 
-          onDeleted={() => onDeleted(id)} 
-          onToggleImportant={()=>onToggleImportant(id)}
-          onToggleDone={()=>onToggleDone(id)}/>
-      </li>
+      <>
+        <ReactDragListView
+          onDragEnd={(fromIndex, toIndex) => onSwapIndex(fromIndex, toIndex)}
+          nodeSelector="li"
+          handleSelector=".todo-list-item__handle--active">
+          <ul className="todo-list">
+            {activeElements}
+          </ul>
+        </ReactDragListView>
+        <ul className="todo-list">
+          {doneElements}
+        </ul>
+      </>
     );
-  });
-
-  return (
-    <ul className="list-group todo-list">
-      { elements }
-    </ul>
-  );
+  };
 };
-
-export default TodoList;
