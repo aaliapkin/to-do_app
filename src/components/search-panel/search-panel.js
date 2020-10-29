@@ -18,7 +18,7 @@ export default class SearchPanel extends Component {
     if(term) {
       clearButton = <div className="input-group-append">
           <button
-            class="btn btn-outline-secondary"
+            className="btn btn-outline-secondary"
             type="button"
             id="button-addon2"
             onClick={clearFilter}>

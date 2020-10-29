@@ -28,3 +28,11 @@
     border-top-right-radius: .25rem;
     border-bottom-right-radius: .25rem;
 }
+
+.item-add-form__text--empty:after {
+    content: "New item...";
+}
+
+.item-add-form__text--empty:focus:after {
+    content: "";
+}

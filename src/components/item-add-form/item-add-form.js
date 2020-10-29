@@ -5,30 +5,34 @@ import './item-add-form.css';
 
 export default class ItemAddForm extends Component {
 
-    constructor(props) {
-        super(props);
-        this.def = this.props.def;
-        this.text = React.createRef();
-        this.text.current = this.def;
-        this.contentEditable = React.createRef();
-        this.form = React.createRef();
+    state = {
+        text: ''
     }
 
-    onLabelChange = (e) => {
+    constructor(props) {
+        super(props);
+        this.contentEditable = React.createRef();
+    }
+
+    onLabelChange = (e) => { // delete me
         this.setState({
             label: e.target.value
         });
     };
 
     onSubmit = () => {
-        if (this.text.current && this.text.current.length) {
-            this.props.onAddItem(this.text.current);
+        const {text} = this.state;
+        if (text && text.length) {
+            this.props.onAddItem(text);
+        } else {
+            this.props.onAddItem("New item..");
         }
-        this.text.current = this.def;
+        this.setState({text: ""});
     }
 
     onChange = (e) => {
-        this.text.current = e.target.value;
+        const text = e.target.value
+        this.setState({text});
     }
 
     onKeyDown = (e) => {
@@ -42,17 +46,27 @@ export default class ItemAddForm extends Component {
     }
 
     render() {
+
+        let contentClassName = ''
+        const {text} = this.state;
+        
+        if(text === '') {
+            contentClassName = 'item-add-form__text item-add-form__text--empty'
+        } else {
+            contentClassName = 'item-add-form__text'
+        }
+
         return (
             <div className="input-group input-group-sm mb-3">
                 <div className="input-group-prepend">
-                    <div className="input-group-text">
-                        <div className="item-add-form__plus"><i className="fa fa-plus"></i></div>
-                    </div>
+                    <button className="btn btn-secondary" onClick={this.onSubmit}>
+                        <i className="fa fa-plus"></i>
+                    </button>
                 </div>
                 <ContentEditable
                     innerRef={this.contentEditable}
-                    className="item-add-form__text"
-                    html={this.text.current}
+                    className={contentClassName}
+                    html={text}
                     onChange={this.onChange}
                     onKeyDown={this.onKeyDown} />
             </div>

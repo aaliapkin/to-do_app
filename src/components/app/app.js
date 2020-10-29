@@ -160,7 +160,7 @@ export default class App extends Component {
           onSwapIndex={this.onSwapIndex}
           draggable={draggable} />
 
-        <ItemAddForm onAddItem={this.addItem} def="New Item..." />
+        <ItemAddForm onAddItem={this.addItem} />
       </div>
     );
   };
