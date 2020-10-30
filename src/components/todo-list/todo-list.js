@@ -6,11 +6,26 @@ import './todo-list.css';
 
 export default class TodoList extends Component {
 
+  onSwapIndex = (fromIndex, toIndex) => {
+    if(toIndex === undefined) {
+      return;
+    }
+    const { todos, onSwapIndex } = this.props;
+    const activeElements = todos.filter((el) => {
+      return !el.done;
+    });
+    const fromId = activeElements[fromIndex].id;
+    const toId = activeElements[toIndex].id;
+    const realFromIndex = todos.findIndex((el) => (el.id === fromId));
+    const realToIndex = todos.findIndex((el) => (el.id === toId));
+    onSwapIndex(realFromIndex, realToIndex);
+  }
+
   render() {
     const { todos, onDeleted, onToggleImportant,
-      onToggleDone, onChangeText, onSwapIndex,
+      onToggleDone, onChangeText,
       draggable } = this.props;
-            
+
     const activeElements = todos.filter((el) => {
       return !el.done;
     }).map((item) => {
@@ -45,7 +60,7 @@ export default class TodoList extends Component {
     return (
       <>
         <ReactDragListView
-          onDragEnd={(fromIndex, toIndex) => onSwapIndex(fromIndex, toIndex)}
+          onDragEnd={this.onSwapIndex}
           nodeSelector="li"
           handleSelector=".todo-list-item__handle--active">
           <ul className="todo-list">
@@ -59,3 +74,5 @@ export default class TodoList extends Component {
     );
   };
 };
+
+// onDragEnd={(fromIndex, toIndex) => onSwapIndex(fromIndex, toIndex)}
